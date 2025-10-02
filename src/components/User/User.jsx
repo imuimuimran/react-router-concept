@@ -21,7 +21,7 @@ const User = ({user}) => {
             <p>{email}</p>
             <p><small>{phone}</small></p>
             <Link to={`/users/${id}`}>Show Details</Link>
-            <button onClick={() => setShowInfo(!showInfo)}>{showInfo ? 'Show' : 'Hide'} Info</button>
+            <button onClick={() => setShowInfo(!showInfo)}>{showInfo ? 'Hide' : 'Show'} Info</button>
 
             {
                 showInfo && <Suspense fallback={<span>Loading...</span>}>

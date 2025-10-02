@@ -1,4 +1,4 @@
-import { Component, StrictMode } from 'react'
+import { Component, StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -9,6 +9,26 @@ import Mobiles from './components/Mobiles/Mobiles.jsx';
 import Root from './components/Root/Root.jsx';
 import Home from './components/Home/Home.jsx';
 import Laptops from './components/Laptops/Laptops.jsx';
+import Users from './components/Users/Users.jsx';
+import NewUsers from './components/NewUsers/NewUsers.jsx';
+import NewUsers2 from './components/NewUsers/NewUsers2.jsx';
+import UserDetail from './components/UserDetail/UserDetail.jsx';
+
+const userPromise = fetch('https://jsonplaceholder.typicode.com/users')
+.then(res => res.json());
+
+const fetchUsers = async () => {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/users');
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    // You can handle the error here, e.g., return an empty array or re-throw the error
+    return []; 
+  }
+};
+const newUserPromise = fetchUsers();
 
 const router = createBrowserRouter([
   {
@@ -17,7 +37,29 @@ const router = createBrowserRouter([
     children: [
       {index: true, Component: Home},
       {path: 'mobiles', Component: Mobiles},
-      {path: 'laptops', Component:Laptops},
+      {path: 'laptops',Component:Laptops},
+      {
+        path: 'users',
+        loader: () => fetch('https://jsonplaceholder.typicode.com/users'), 
+        Component: Users
+      },
+      {
+        path: 'new-users',
+        element: <Suspense fallback='New Users Data...'>
+          <NewUsers userPromise={userPromise}></NewUsers>
+        </Suspense>
+      },
+      {
+        path: 'new-users2',
+        element: <Suspense fallback= 'New Users Data 2'>
+          <NewUsers2 newUserPromise = {newUserPromise}></NewUsers2>
+        </Suspense>
+      },
+      {
+        path: 'users/:userId',
+        loader: ({params}) => fetch(`https://jsonplaceholder.typicode.com/users/${params.userId}`),
+        Component: UserDetail
+      },
     ]
   },
   {path: "/about",

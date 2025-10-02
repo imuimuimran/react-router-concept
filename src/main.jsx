@@ -13,6 +13,8 @@ import Users from './components/Users/Users.jsx';
 import NewUsers from './components/NewUsers/NewUsers.jsx';
 import NewUsers2 from './components/NewUsers/NewUsers2.jsx';
 import UserDetail from './components/UserDetail/UserDetail.jsx';
+import Posts from './components/Posts/Posts.jsx';
+import PostDetail from './components/PostDetail/PostDetail.jsx';
 
 const userPromise = fetch('https://jsonplaceholder.typicode.com/users')
 .then(res => res.json());
@@ -60,6 +62,16 @@ const router = createBrowserRouter([
         loader: ({params}) => fetch(`https://jsonplaceholder.typicode.com/users/${params.userId}`),
         Component: UserDetail
       },
+      {
+        path: 'posts',
+        loader: () => fetch('https://jsonplaceholder.typicode.com/posts'),
+        Component: Posts,
+      },
+      {
+        path: 'posts/:postId',
+        loader: ({params}) => fetch(`https://jsonplaceholder.typicode.com/posts/${params.postId}`) ,
+        Component: PostDetail,
+      },
     ]
   },
   {path: "/about",
@@ -76,7 +88,11 @@ const router = createBrowserRouter([
   {
     path: "app2",
     element: <App2></App2>
-  }
+  },
+  {
+    path: '*',
+    element: <h3>Not Found: This is 404 issue</h3>
+  },
 ]);
 
 createRoot(document.getElementById('root')).render(
